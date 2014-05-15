@@ -11,6 +11,8 @@ var express = require('express')
 
 var servo = require('servoControl');
 
+var x = 1;
+
 var app = express();
 
 app.configure(function(){
@@ -31,9 +33,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/blink', servo.blink);
-app.get('/blink/:interval', servo.blinkInterval);
-app.get('/turnRight', servo.turnRight);
+app.get('/changepwm/:dutycycle', servo.changepwm);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

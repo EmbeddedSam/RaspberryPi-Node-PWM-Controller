@@ -1,40 +1,82 @@
 extends layout
 
 block content
-	.row
-		.twelve.columns.text-center
-			.panel
-				h1 rPi Servo Controller
-				h5.subheader 
-					| The <strong>only</strong> place to control the servo
-					| hooked up to this Raspberry Pi
-	.row
-		.six.columns.centered
-			.panel
-				.row
-					.six.columns.centered.text-center 
-						h3#sliderOutput 20
-						input(type='range', min='1', max='180', step='1')
-						br
-						br
-						a#blinkButton.button.alert Slider GO!
-						hr
-				.row
-					.six.columns
-						a.button.large.right Left
-					.six.columns
-						a.button.large.something Right
-				.row
-					hr
-					.six.columns.centered.text-center
-						h2 43˚
-						h4.subheader current position
+    .row
+        .twelve.columns.text-center
+            .panel
+                h1 Raspberry Pi PWM Controller
+                h5.subheader 
+                    | Control the PWM output
+                    | hooked up to the Raspberry Pi GPIO 17 and GPIO 18
 
-	script(type='text/javascript')
-		$("#blinkButton").on('click', function(){
-			$.get('/blink', function(){
-				});
-		});
-		$('.something').on('click', function(){
-			$.get('/turnRight');
-		});
+        .twelve.columns.text-center
+            .panel
+                input#fader(type='range', min='0', max='100', value='0', step='1', oninput='outputUpdate(value)')
+        .twelve.columns.text-center
+            .panel
+                h2
+                    output#dutycycle(for='fader') 0%
+                .twelve.columns.text-center
+            .panel
+                h6.subheader
+                    Copyright 2014 University of Manchester
+
+
+
+               
+
+    script(type='text/javascript')
+        $("#blinkButton").on('click', function(){
+            $.get('/changepwm/0.35', function(){
+                });
+        });
+        $('.something').on('click', function(){
+            $.get('/turnRight');
+        });
+        function outputUpdate(duty) {
+            document.querySelector('#dutycycle').value = duty+"%";
+            $.get('/changepwm/' + duty/100, function(){
+                });
+        }
+        $('input[type="range"]').rangeslider();
+
+    style
+      input[type='range'] {
+      -webkit-appearance: none;
+      border-radius: 20px;
+      box-shadow: inset 0 0 5px #333;
+      background-color: #3f91e5;
+      height: 50px;
+      width: 650px;
+      vertical-align: middle;
+      }
+      input[type='range']::-moz-range-track {
+      -moz-appearance: none;
+      border-radius: 20px;
+      box-shadow: inset 0 0 5px #333;
+      background-color: #3f91e5;
+      height: 40px;
+      }
+      input[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none !important;
+      border-radius: 40px;
+      background-color: #FFF;
+      box-shadow:inset 0 0 10px rgba(000,000,000,0.5);
+      border: 1px solid #666;
+      height: 55px;
+      width: 55px;
+      }
+      input[type='range']::-moz-range-thumb {
+      -moz-appearance: none;
+      border-radius: 40px;
+      background-color: #FFF;
+      box-shadow:inset 0 0 10px rgba(000,000,000,0.5);
+      border: 1px solid #999;
+      height: 40px;
+      width: 40px;
+      }
+
+
+
+
+
